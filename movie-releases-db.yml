@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: movie-releases-db
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: movie-releases-db
+    spec:
+      containers:
+      - resources:
+        name: movie-releases-db
+        image: postgres:9.6.2-alpine
+        ports:
+        - name: postgres-port
+          containerPort: 5432
+        env:
+        - name: POSTGRES_DB
+          value: "movies"
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: movie-releases-db
+              key: username
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: movie-releases-db
+              key: password
+      imagePullSecrets:
+      - name: registrykey

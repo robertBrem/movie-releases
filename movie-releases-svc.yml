@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: movie-releases
+  labels:
+    name: movie-releases
+spec:
+  ports:
+  - port: 8080
+    targetPort: 8080
+    nodePort: 32100
+  selector:
+    name: movie-releases
+  type: NodePort

@@ -1,0 +1,35 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: movie-releases
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: movie-releases
+    spec:
+      containers:
+      - resources:
+        name: movie-releases
+        image: disruptor.ninja:30500/robertbrem/movie-releases:1.0.1
+        ports:
+        - name: port
+          containerPort: 8080
+        env:
+        - name: SERVICE_HOST
+          value: "movie-releases-db"
+        - name: SERVICE_PORT
+          value: "5432"
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: movie-releases-db
+              key: username
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: movie-releases-db
+              key: password
+      imagePullSecrets:
+      - name: registrykey

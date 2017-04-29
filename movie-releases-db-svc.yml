@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: movie-releases-db
+  labels:
+    name: movie-releases-db
+spec:
+  ports:
+  - port: 5432
+    targetPort: 5432
+  selector:
+    name: movie-releases-db
