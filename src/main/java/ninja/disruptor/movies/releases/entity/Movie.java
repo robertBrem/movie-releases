@@ -11,7 +11,8 @@ import javax.persistence.*;
 @NoArgsConstructor
 @NamedQueries({
         @NamedQuery(name = "findByTitle", query = "SELECT m FROM Movie m WHERE m.title = :title"),
-        @NamedQuery(name = "findAll", query = "SELECT m FROM Movie m")
+        @NamedQuery(name = "findAll", query = "SELECT m FROM Movie m"),
+        @NamedQuery(name = "findAllDownloaded", query = "SELECT m FROM Movie m WHERE m.downloaded = :downloaded")
 })
 @Data
 @Entity

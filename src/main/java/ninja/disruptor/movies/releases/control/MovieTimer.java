@@ -22,12 +22,28 @@ public class MovieTimer {
 
     @PostConstruct
     public void setUp() {
-        callSite();
+        callSites();
     }
 
     @Schedule(hour = "*/12")
-    public void callSite() {
-        for (Movie movie : caller.getTop100Range30Days()) {
+    public void callSites() {
+        for (Movie movie : caller.getTopBewertet30Days()) {
+            List<Movie> movies = em.createNamedQuery("findByTitle", Movie.class)
+                    .setParameter("title", movie.getTitle())
+                    .getResultList();
+            if (movies.isEmpty()) {
+                em.merge(movie);
+            }
+        }
+        for (Movie movie : caller.getTopBewertet30Days()) {
+            List<Movie> movies = em.createNamedQuery("findByTitle", Movie.class)
+                    .setParameter("title", movie.getTitle())
+                    .getResultList();
+            if (movies.isEmpty()) {
+                em.merge(movie);
+            }
+        }
+        for (Movie movie : caller.getTopALaCarte30Days()) {
             List<Movie> movies = em.createNamedQuery("findByTitle", Movie.class)
                     .setParameter("title", movie.getTitle())
                     .getResultList();

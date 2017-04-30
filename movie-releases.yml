@@ -12,7 +12,7 @@ spec:
       containers:
       - resources:
         name: movie-releases
-        image: disruptor.ninja:30500/robertbrem/movie-releases:1.0.1
+        image: disruptor.ninja:30500/robertbrem/movie-releases:1.0.3
         ports:
         - name: port
           containerPort: 8080

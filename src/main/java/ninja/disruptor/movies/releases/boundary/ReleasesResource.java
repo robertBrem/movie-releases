@@ -53,17 +53,25 @@ public class ReleasesResource {
     }
 
     @GET
-    public void getReleases(@Suspended AsyncResponse response) {
-        supplyAsync(() -> getMoviesAsJson(
-                em.createNamedQuery("findAll", Movie.class)
-                        .getResultList()))
-                .thenApply(response::resume);
+    public void getReleases(@Suspended AsyncResponse response, @QueryParam("downloaded") Boolean downloaded) {
+        if (downloaded == null) {
+            supplyAsync(() -> getMoviesAsJson(
+                    em.createNamedQuery("findAll", Movie.class)
+                            .getResultList()))
+                    .thenApply(response::resume);
+        } else {
+            supplyAsync(() -> getMoviesAsJson(
+                    em.createNamedQuery("findAllDownloaded", Movie.class)
+                            .setParameter("downloaded", downloaded)
+                            .getResultList()))
+                    .thenApply(response::resume);
+        }
     }
 
     @GET
     @Path("videobuster")
     public void searchReleases(@Suspended AsyncResponse response) {
-        supplyAsync(() -> getMoviesAsJson(extractor.getTop100Range30Days()))
+        supplyAsync(() -> getMoviesAsJson(extractor.getTopALaCarte30Days()))
                 .thenApply(response::resume);
     }
 
