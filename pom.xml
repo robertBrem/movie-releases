@@ -27,12 +27,6 @@
             <artifactId>lombok</artifactId>
             <version>1.16.12</version>
         </dependency>
-        <dependency>
-            <groupId>com.airhacks</groupId>
-            <artifactId>jaxrs-cors</artifactId>
-            <version>0.0.2</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
     <build>
         <finalName>releases</finalName>

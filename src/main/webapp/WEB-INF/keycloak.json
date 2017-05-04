@@ -1,0 +1,8 @@
+{
+  "realm": "battleapp-local",
+  "bearer-only": true,
+  "auth-server-url": "http://keycloak:8080/auth",
+  "ssl-required": "none",
+  "resource": "movie-releases-backend",
+  "enable-cors": true
+}
