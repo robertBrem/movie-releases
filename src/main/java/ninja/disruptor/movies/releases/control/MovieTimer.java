@@ -1,5 +1,8 @@
 package ninja.disruptor.movies.releases.control;
 
+import com.ullink.slack.simpleslackapi.SlackChannel;
+import com.ullink.slack.simpleslackapi.SlackSession;
+import com.ullink.slack.simpleslackapi.impl.SlackSessionFactory;
 import ninja.disruptor.movies.releases.entity.Movie;
 
 import javax.annotation.PostConstruct;
@@ -7,6 +10,8 @@ import javax.ejb.*;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Startup
@@ -27,30 +32,31 @@ public class MovieTimer {
 
     @Schedule(hour = "*/12")
     public void callSites() {
-        for (Movie movie : caller.getTopBewertet30Days()) {
-            List<Movie> movies = em.createNamedQuery("findByTitle", Movie.class)
+        List<Movie> movies = new ArrayList<>();
+        movies.addAll(caller.getTopBewertet30Days());
+        movies.addAll(caller.getTopVerleih30Days());
+        movies.addAll(caller.getTopALaCarte30Days());
+
+        for (Movie movie : movies) {
+            List<Movie> dbMovies = em.createNamedQuery("findByTitle", Movie.class)
                     .setParameter("title", movie.getTitle())
                     .getResultList();
-            if (movies.isEmpty()) {
+            if (dbMovies.isEmpty()) {
                 em.merge(movie);
+                callBot(movie.getUrl());
             }
         }
-        for (Movie movie : caller.getTopBewertet30Days()) {
-            List<Movie> movies = em.createNamedQuery("findByTitle", Movie.class)
-                    .setParameter("title", movie.getTitle())
-                    .getResultList();
-            if (movies.isEmpty()) {
-                em.merge(movie);
-            }
+    }
+
+    private void callBot(String text) {
+        SlackSession session = SlackSessionFactory.createWebSocketSlackSession(System.getenv("SLACK_TOKEN"));
+        try {
+            session.connect();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        for (Movie movie : caller.getTopALaCarte30Days()) {
-            List<Movie> movies = em.createNamedQuery("findByTitle", Movie.class)
-                    .setParameter("title", movie.getTitle())
-                    .getResultList();
-            if (movies.isEmpty()) {
-                em.merge(movie);
-            }
-        }
+        SlackChannel channel = session.findChannelByName("general"); //make sure bot is a member of the channel.
+        session.sendMessage(channel, text);
     }
 
 }

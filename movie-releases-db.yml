@@ -22,12 +22,12 @@ spec:
         - name: POSTGRES_USER
           valueFrom:
             secretKeyRef:
-              name: movie-releases-db
+              name: movie-releases
               key: username
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: movie-releases-db
+              name: movie-releases
               key: password
       imagePullSecrets:
       - name: registrykey
