@@ -36,6 +36,7 @@ public class MovieTimer {
         movies.addAll(caller.getTopBewertet30Days());
         movies.addAll(caller.getTopVerleih30Days());
         movies.addAll(caller.getTopALaCarte30Days());
+        movies.addAll(caller.getTopVerleih12Monate());
 
         for (Movie movie : movies) {
             List<Movie> dbMovies = em.createNamedQuery("findByTitle", Movie.class)

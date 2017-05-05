@@ -38,6 +38,14 @@ public class MovieExtractor {
         return movies;
     }
 
+    public List<Movie> getTopVerleih12Monate() {
+        List<Movie> movies = new ArrayList<>();
+        for (int pageIndex = 1; pageIndex <= 5; pageIndex++) {
+            movies.addAll(getMoviesForPage(getDocumentTopVerleih12Monate(pageIndex)));
+        }
+        return movies;
+    }
+
     public List<Movie> getMoviesForPage(Document doc) {
         List<Movie> movies = new ArrayList<>();
         Elements list = doc.select(".list");
@@ -108,6 +116,19 @@ public class MovieExtractor {
         try {
             doc = Jsoup
                     .connect("https://www.videobuster.de/top-bewertet-30-tage.php?pospage=" + pageIndex + "&wrapped=100&search_title=&tab_search_content=movies&view=0&wrapped=100#titlelist_head")
+                    .timeout(10 * 1000)
+                    .get();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return doc;
+    }
+
+    public Document getDocumentTopVerleih12Monate(int pageIndex) {
+        Document doc = null;
+        try {
+            doc = Jsoup
+                    .connect("https://www.videobuster.de/top-dvd-verleih-12-monate.php?pospage=" + pageIndex + "&wrapped=100&search_title=&tab_search_content=movies&view=0#titlelist_head")
                     .timeout(10 * 1000)
                     .get();
         } catch (IOException e) {
